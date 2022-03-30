@@ -26,7 +26,8 @@ rerollPlease = ""
 def say(phrase, rate=280, log=True):
     print(phrase)
     global history
-    if log: history.append(phrase)
+    if log:
+        history.append(phrase)
     global mute
     if(not mute):
         engine = pyttsx3.init()
@@ -40,6 +41,7 @@ def repeatPlease():
     if len(history) > 0:
         say(history.pop(), 130)
 
+
 def timelog():
     say(time.strftime("%H:%M:%S", time.gmtime()), 280)
 
@@ -48,12 +50,9 @@ def roll(diceText):
     global rerollPlease
     rerollPlease = diceText
     launches = diceText.split(";")
-    global timecode
-    if(timecode):
-        timelog()
     toSay = ""
     for launch in launches:
-        #replace shortcuts with values
+        # replace shortcuts with values
         if(launch[:1].upper() == "A"):
             launch = "1d20" + launch[1:]
         if(launch[:1].upper() == "Z"):
@@ -66,19 +65,19 @@ def roll(diceText):
             launch = "1d6" + launch[1:]
         if(launch[:1].upper() == "Y"):
             launch = "1d4" + launch[1:]
-        #determine modifier sign
+        # determine modifier sign
         modifierSign = 1
         if launch.__contains__('-'):
             modifierSign = -1
-        #get the 2or 3 values in dice special form
+        # get the 2 or 3 values in dice special form
         diceInfo = re.split("[^\d]+", launch)
-        if diceInfo[0] == "" or diceInfo[1] == "":
+        if len(diceInfo) < 2 or diceInfo[0] == "" or diceInfo[1] == "":
             say("Erreur, valeur saisie invalide.", 280, False)
             return False
         else:
             diceInfo[0] = int(diceInfo[0])  # number of dice
             diceInfo[1] = int(diceInfo[1])  # dice type
-            if (len(diceInfo) > 2):  # result modifier
+            if len(diceInfo) > 2:  # result modifier
                 if diceInfo[2] != '':
                     diceInfo[2] = int(diceInfo[2])
                 else:
@@ -96,6 +95,9 @@ def roll(diceText):
             else:
                 say("Erreur, valeur saisie invalide.", 280, False)
                 return False
+    global timecode
+    if(timecode):
+        timelog()
     say(toSay)
 
 
@@ -106,11 +108,12 @@ def help():
         "Autres commandes : P (Papa) ou Entrée - Répéter la dernière phrase; O (Oscar) - Refaire le dernier lancé; I (India) - Ouvrir le fichier des 5 derniers lancés; U (Uniform) - Ouvrir le fichier historique complet; Q (Quebec) - Quitter le programme;", 200, False)
 
 
-def historyOpen(number = 0):
+def historyOpen(number=0):
 
     # if timecode is on we need to double the number of lines
     global timecode
-    if(timecode): number = 2*number 
+    if(timecode):
+        number = 2*number
 
     # open 5 last launch or everything
     global history
