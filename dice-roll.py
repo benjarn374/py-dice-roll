@@ -46,6 +46,20 @@ def timelog():
     say(time.strftime("%H:%M:%S", time.gmtime()), 280)
 
 
+def isDiceAbove(dice, level): return dice > level
+def isDiceUnder(dice, level): return dice < level
+def isDiceAboveOrEqual(dice, level): return dice >= level
+def isDiceUnderOrEqual(dice, level): return dice <= level
+def isDiceMultiple(dice, multiple): return dice % multiple == 0
+
+successLabel = {
+    "isDiceAbove": "Supérieurs à",
+    "isDiceUnder": "Supérieurs à",
+    "isDiceAboveOrEqual": "Supérieurs à",
+    "isDiceUnderOrEqual": "Supérieurs à",
+    "isDiceMultiple": "Multiple de",
+}
+
 def roll(diceText):
     global rerollPlease
     rerollPlease = diceText
@@ -65,36 +79,68 @@ def roll(diceText):
             launch = "1d6" + launch[1:]
         if(launch[:1].upper() == "Y"):
             launch = "1d4" + launch[1:]
+        # determine success level
+        successType = ""
+        if launch.__contains__('>'):
+            successType = "isDiceAbove"
+        if launch.__contains__('<'):
+            successType = "isDiceUnder"
+        if launch.__contains__('>='):
+            successType = "isDiceAboveOrEqual"
+        if launch.__contains__('<='):
+            successType = "isDiceUnderOrEqual"
+        if launch.__contains__('%'):
+            successType = "isDiceMultiple"
         # determine modifier sign
         modifierSign = 1
         if launch.__contains__('-'):
             modifierSign = -1
         # get the 2 or 3 values in dice special form
         diceInfo = re.split("[^\d]+", launch)
-        if len(diceInfo) < 2 or diceInfo[0] == "" or diceInfo[1] == "":
+        if len(diceInfo) < 2 or diceInfo[0] == "":
             say("Erreur, valeur saisie invalide.", 280, False)
             return False
         else:
-            diceInfo[0] = int(diceInfo[0])  # number of dice
-            diceInfo[1] = int(diceInfo[1])  # dice type
-            if len(diceInfo) > 2:  # result modifier
-                if diceInfo[2] != '':
-                    diceInfo[2] = int(diceInfo[2])
+            # dice success level
+            if successType != "" and len(diceInfo) > 2:
+                successLevel = diceInfo.pop()
+                if successLevel != "":
+                    successLevel = int(successLevel)
                 else:
-                    diceInfo[2] = 0
+                    successLevel = 0
+            # number of dice 
+            diceInfo[0] = int(diceInfo[0])
+            # dice faces type
+            if len(diceInfo) > 1 and diceInfo[1] != "":
+                diceInfo[1] = int(diceInfo[1])
             else:
+                diceInfo[1] = 6
+            # dice modifier
+            if len(diceInfo) == 2:
                 diceInfo.append(0)
+            elif len(diceInfo) > 2 and diceInfo[2] != "":
+                diceInfo[2] = int(diceInfo[2])
+            else:
+                diceInfo[2] = 0
+
             if diceInfo[0] > 0 and diceInfo[1] > 0:
                 results = ""
+                success = 0
                 for i in range(diceInfo[0]):
-                    results = results + " " + \
-                        str(random.randrange(
-                            1, diceInfo[1]+1)+(modifierSign*diceInfo[2]))
+
+                    result = random.randrange(
+                        1, diceInfo[1]+1)+(modifierSign*diceInfo[2])
+                    results = results + " " + str(result)
+                    if successType != "":
+                        if globals()[successType](result,successLevel): success = success + 1
+
                 toSay = toSay + str(diceInfo[0]) + "d" + str(diceInfo[1]) + ("" if diceInfo[2] == 0 else (
                     "+" if modifierSign > 0 else"-") + str(diceInfo[2])) + " :" + results + "\n"
             else:
                 say("Erreur, valeur saisie invalide.", 280, False)
                 return False
+    if successType != "":
+        toSay = toSay + str(success) + " lancés sur " + str(diceInfo[0]) + " " + successLabel[successType] + " " + str(successLevel) + "\n"
     global timecode
     if(timecode):
         timelog()
