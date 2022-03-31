@@ -46,19 +46,23 @@ def timelog():
     say(time.strftime("%H:%M:%S", time.gmtime()), 280)
 
 
+def isDiceEqual(dice, level): return dice == level
 def isDiceAbove(dice, level): return dice > level
 def isDiceUnder(dice, level): return dice < level
 def isDiceAboveOrEqual(dice, level): return dice >= level
 def isDiceUnderOrEqual(dice, level): return dice <= level
 def isDiceMultiple(dice, multiple): return dice % multiple == 0
 
+
 successLabel = {
+    "isDiceEqual": "Égaux à",
     "isDiceAbove": "Supérieurs à",
-    "isDiceUnder": "Supérieurs à",
-    "isDiceAboveOrEqual": "Supérieurs à",
-    "isDiceUnderOrEqual": "Supérieurs à",
+    "isDiceUnder": "Inférieurs à",
+    "isDiceAboveOrEqual": "Supérieurs ou égaux à",
+    "isDiceUnderOrEqual": "Inférieurs ou égaux à",
     "isDiceMultiple": "Multiple de",
 }
+
 
 def roll(diceText):
     global rerollPlease
@@ -66,6 +70,11 @@ def roll(diceText):
     launches = diceText.split(";")
     toSay = ""
     for launch in launches:
+        # do the sum please
+        sumMyResults = False
+        if(launch[:1] == "!"):
+            sumMyResults = True
+            launch = launch[1:]
         # replace shortcuts with values
         if(launch[:1].upper() == "A"):
             launch = "1d20" + launch[1:]
@@ -81,6 +90,8 @@ def roll(diceText):
             launch = "1d4" + launch[1:]
         # determine success level
         successType = ""
+        if launch.__contains__('='):
+            successType = "isDiceEqual"
         if launch.__contains__('>'):
             successType = "isDiceAbove"
         if launch.__contains__('<'):
@@ -108,7 +119,7 @@ def roll(diceText):
                     successLevel = int(successLevel)
                 else:
                     successLevel = 0
-            # number of dice 
+            # number of dice
             diceInfo[0] = int(diceInfo[0])
             # dice faces type
             if len(diceInfo) > 1 and diceInfo[1] != "":
@@ -126,21 +137,26 @@ def roll(diceText):
             if diceInfo[0] > 0 and diceInfo[1] > 0:
                 results = ""
                 success = 0
+                Sum = 0
                 for i in range(diceInfo[0]):
-
                     result = random.randrange(
                         1, diceInfo[1]+1)+(modifierSign*diceInfo[2])
+                    Sum = Sum + result
                     results = results + " " + str(result)
                     if successType != "":
-                        if globals()[successType](result,successLevel): success = success + 1
+                        if globals()[successType](result, successLevel):
+                            success = success + 1
 
                 toSay = toSay + str(diceInfo[0]) + "d" + str(diceInfo[1]) + ("" if diceInfo[2] == 0 else (
                     "+" if modifierSign > 0 else"-") + str(diceInfo[2])) + " :" + results + "\n"
             else:
                 say("Erreur, valeur saisie invalide.", 280, False)
                 return False
-    if successType != "":
-        toSay = toSay + str(success) + " lancés sur " + str(diceInfo[0]) + " " + successLabel[successType] + " " + str(successLevel) + "\n"
+        if successType != "":
+            toSay = toSay + str(success) + " résultats sur " + str(
+                diceInfo[0]) + " " + successLabel[successType] + " " + str(successLevel) + "\n"
+        if sumMyResults:
+            toSay = toSay + "Total : " + str(Sum) + "\n"
     global timecode
     if(timecode):
         timelog()

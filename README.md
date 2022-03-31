@@ -40,3 +40,17 @@ Vous pouvez séparer les formes abrégées par point-virgule pour faire plusieur
 * 3d20+3;T;2D6
 * ...
 
+# Somme et Comptage des succès
+Vous pouvez faire la somme de vos dés en faisant précédé vos formes du points d'exclamation.
+Exemple : !3d6
+
+Vous pouvez obtenir un décompte des succès lorsque vous jeter des Dés.
+Pour cela utilisez les opérateurs =, >, <, >=, <=, %
+Exemple :
+* 3D6+4>5
+* 5D20+1>=15
+* 10d6%2
+NB: %2 indique si le nombre est paire (car multiple de 2)
+
+# Tests fonctionnels
+5D20+1>=15;!3d6;4.6+3;8d;a+3;10d6=6;!6d8%2
