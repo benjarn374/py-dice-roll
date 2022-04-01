@@ -167,7 +167,8 @@ def help():
     say("Pour lancer vos dés, saisissez des formes abrégées séparées par des point-virgules.\n" +
         "exemple : 1d6, 2d20+3, 4d6... \n" +
         "Touches Raccourcies AZERTY : A (Alpha) - 1d20; Z (Zoulou) - 1d12 ; E (Echo) - 1d10 ; R (Romeo) - 1d8 ; T (Tango) - 1d6 ; Y (Yankee) - 1d4 \n" +
-        "Autres commandes : P (Papa) ou Entrée - Répéter la dernière phrase; O (Oscar) - Refaire le dernier lancé; I (India) - Ouvrir le fichier des 5 derniers lancés; U (Uniform) - Ouvrir le fichier historique complet; Q (Quebec) - Quitter le programme;", 200, False)
+        "Autres commandes : P (Papa) ou Entrée - Répéter la dernière phrase; O (Oscar) - Refaire le dernier lancé; I (India) - Ouvrir le fichier des 5 derniers lancés; U (Uniform) - Ouvrir le fichier historique complet; Q (Quebec) - Quitter le programme;\n" +
+        "Autres astuces : Utilisez le point d'exclamation avant un lancé pour faire une somme; Testez vos résultats avec les opérateurs : 4D6>5, 4D6%2;", 200, False)
 
 
 def historyOpen(number=0):
