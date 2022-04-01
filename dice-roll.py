@@ -22,7 +22,6 @@ else:
 history = []
 rerollPlease = ""
 
-
 def say(phrase, rate=280, log=True):
     print(phrase)
     global history
@@ -35,16 +34,13 @@ def say(phrase, rate=280, log=True):
         engine.say(phrase)
         engine.runAndWait()
 
-
 def repeatPlease():
     global history
     if len(history) > 0:
         say(history.pop(), 130)
 
-
 def timelog():
     say(time.strftime("%H:%M:%S", time.gmtime()), 280)
-
 
 def isDiceEqual(dice, level): return dice == level
 def isDiceAbove(dice, level): return dice > level
@@ -162,14 +158,29 @@ def roll(diceText):
         timelog()
     say(toSay)
 
-
 def help():
     say("Pour lancer vos dés, saisissez des formes abrégées séparées par des point-virgules.\n" +
         "exemple : 1d6, 2d20+3, 4d6... \n" +
         "Touches Raccourcies AZERTY : A (Alpha) - 1d20; Z (Zoulou) - 1d12 ; E (Echo) - 1d10 ; R (Romeo) - 1d8 ; T (Tango) - 1d6 ; Y (Yankee) - 1d4 \n" +
-        "Autres commandes : P (Papa) ou Entrée - Répéter la dernière phrase; O (Oscar) - Refaire le dernier lancé; I (India) - Ouvrir le fichier des 5 derniers lancés; U (Uniform) - Ouvrir le fichier historique complet; Q (Quebec) - Quitter le programme;\n" +
+        "Autres commandes : P (Papa) ou Entrée - Répéter la dernière phrase; O (Oscar) - Refaire le dernier lancé; I (India) - Ouvrir le fichier des 5 derniers lancés; U (Uniform) - Ouvrir le fichier historique complet; M (Mike) - Active ou désactive le son; L (Lima) - active ou desactive les time code; Q (Quebec) - Quitter le programme;\n" +
         "Autres astuces : Utilisez le point d'exclamation avant un lancé pour faire une somme; Testez vos résultats avec les opérateurs : 4D6>5, 4D6%2;", 200, False)
 
+def Mute():
+    global mute
+    if mute :
+        mute = False
+        say("La synthèse vocale est activée.",280,False)
+    else: 
+        say("La synthèse vocale est éteinte.",280,False)
+        mute = True
+
+def TimeLog():
+    global timecode
+    timecode = not timecode
+    if timecode :
+        say("Les Time Codes sont activés.",280,False)
+    else: 
+        say("Les Time Codes sont éteints.",280,False)
 
 def historyOpen(number=0):
 
@@ -194,7 +205,6 @@ def historyOpen(number=0):
     # Open file with default text program
     os.startfile("history.log")
 
-
 say("Bonjour, Appuyer sur H (Hotel) pour lire l'aide.", 280, False)
 
 inputText = ""
@@ -211,6 +221,10 @@ while True:
         historyOpen(5)
     elif inputText[:1].upper() == "U":
         historyOpen()
+    elif inputText[:1].upper() == "M":
+        Mute()
+    elif inputText[:1].upper() == "L":
+        TimeLog()
     elif inputText[:1].upper() == "Q":
         break
     else:
