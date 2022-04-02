@@ -59,3 +59,7 @@ NB: %2 indique si le nombre est paire (car multiple de 2)
 
 # Tests fonctionnels
 5D20+1>=15;!3d6;4.6+3;8d;a+3;10d6=6;!6d8%2
+
+# Executable
+Executable généré avec PyInstaller. 
+Icon : https://www.deviantart.com/iconcubic/art/DnD-Dice-icon-Windows-version-40275063

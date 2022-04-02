@@ -1,1 +1,5 @@
 history.log
+exe/build
+exe/dist
+exe/*.spec
+__pycache__

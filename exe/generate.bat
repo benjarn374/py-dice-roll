@@ -1,0 +1,1 @@
+pyinstaller ../py/dice-roll.py --clean --noconfirm --onefile -i="assets\Iconcubic-Dnd-Dice-D20.ico"
