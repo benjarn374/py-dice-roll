@@ -24,6 +24,8 @@ Ajoute un timecode avant chaque lancé|
 * I = Ouvrir un fichier avec les 5 derniers lancés
 * U = Ouvrir un fichier avec l'historique complet
 * Q - Quitter le programme 
+* M - Mute/UnMute la synthèse vocale
+* L - Active ou Désactive les Timecodes avant chaque lancé
 
 # Formes abrégés supportées
 * 1d20 
