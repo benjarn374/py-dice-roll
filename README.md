@@ -64,4 +64,5 @@ NB: %2 indique si le nombre est paire (car multiple de 2)
 
 # Executable
 Executable généré avec PyInstaller. 
+
 Icon : https://www.deviantart.com/iconcubic/art/DnD-Dice-icon-Windows-version-40275063
